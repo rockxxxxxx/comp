@@ -1,13 +1,20 @@
 import "./App.css";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 function App() {
+  const [user, setUser] = useState([]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const handleRegistration = (data) => console.log(data);
+
+  const handleRegistration = (data) => {
+    setUser([...user, data]);
+    console.log(user);
+  };
   const handleError = (errors) => {};
 
   const registerOptions = {
@@ -89,6 +96,26 @@ function App() {
           <button>Submit</button>
         </div>
       </form>
+      <table id="customers">
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Actions</th>
+        </tr>
+        {user.map((data) => {
+          return (
+            <tr>
+              <td>{data.fname}</td>
+              <td>{data.lname}</td>
+              <td>{data.email}</td>
+              <td>{data.phn}</td>
+              <td>Edit, Delete</td>
+            </tr>
+          );
+        })}
+      </table>
     </div>
   );
 }
