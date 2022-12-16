@@ -1,19 +1,48 @@
 import "./App.css";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { v4 as uuid } from "uuid";
+import userEvent from "@testing-library/user-event";
 
 function App() {
   const [user, setUser] = useState([]);
+  const [update, setUpdate] = useState(false);
 
   const {
     register,
     handleSubmit,
+    resetField,
+    setValue,
     formState: { errors },
   } = useForm();
 
   const handleRegistration = (data) => {
-    setUser([...user, data]);
-    console.log(user);
+    if (update) {
+      const updatedUser = user.map((user) => {
+        if (user.id === data.id) {
+          user.email = data.email;
+          user.fname = data.fname;
+          user.lname = data.lname;
+          user.phn = data.phn;
+        }
+        return user;
+      });
+      setUser(updatedUser);
+      setUpdate(false);
+      resetField("fname");
+      resetField("lname");
+      resetField("email");
+      resetField("phn");
+    } else {
+      const unique_id = uuid();
+      const data1 = { ...data, id: unique_id };
+      setUser([...user, data1]);
+      resetField("fname");
+      resetField("lname");
+      resetField("email");
+      resetField("phn");
+      console.log(user);
+    }
   };
   const handleError = (errors) => {};
 
@@ -37,9 +66,25 @@ function App() {
       required: "Phone number is required",
       minLength: {
         value: 10,
-        message: "Phone number must have at least 8 characters",
+        message: "Phone number must have at least 10 characters",
       },
     },
+  };
+
+  const editHandler = (id, fname, lname, email, phn) => {
+    setValue("fname", fname);
+    setValue("lname", lname);
+    setValue("email", email);
+    setValue("phn", phn);
+    setValue("id", id);
+    setUpdate(true);
+    console.log(id, fname);
+  };
+
+  const deleteHandler = (id) => {
+    const updatedUser = user.filter((user) => user.id !== id);
+    setUser(updatedUser);
+    console.log(id);
   };
 
   return (
@@ -49,6 +94,12 @@ function App() {
       <form onSubmit={handleSubmit(handleRegistration, handleError)}>
         <div className="form">
           <div className="formt">
+            <input
+              name="id"
+              type="text"
+              {...register("id", registerOptions.id)}
+              hidden
+            />
             <input
               name="fname"
               type="text"
@@ -93,7 +144,8 @@ function App() {
               {errors?.phn && errors.phn.message}
             </small>
           </div>
-          <button>Submit</button>
+          {!update && <button>Submit</button>}
+          {update && <button>Update</button>}
         </div>
       </form>
       <table id="customers">
@@ -111,7 +163,29 @@ function App() {
               <td>{data.lname}</td>
               <td>{data.email}</td>
               <td>{data.phn}</td>
-              <td>Edit, Delete</td>
+              <td>
+                <span
+                  onClick={() =>
+                    editHandler(
+                      data.id,
+                      data.fname,
+                      data.lname,
+                      data.email,
+                      data.phn
+                    )
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  Edit
+                </span>{" "}
+                ,
+                <span
+                  onClick={() => deleteHandler(data.id)}
+                  style={{ cursor: "pointer" }}
+                >
+                  Delete
+                </span>
+              </td>
             </tr>
           );
         })}
