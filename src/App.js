@@ -158,7 +158,7 @@ function App() {
         </tr>
         {user.map((data) => {
           return (
-            <tr>
+            <tr key={data.key}>
               <td>{data.fname}</td>
               <td>{data.lname}</td>
               <td>{data.email}</td>
