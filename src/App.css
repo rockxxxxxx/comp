@@ -59,30 +59,30 @@ input {
 .text-danger {
   color: red;
 }
-#customers {
+#users {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-#customers td,
-#customers th {
+#users td,
+#users th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#customers tr:nth-child(even) {
+#users tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#customers tr:hover {
+#users tr:hover {
   background-color: #ddd;
 }
 
-#customers th {
+#users th {
   padding-top: 12px;
   padding-bottom: 12px;
-  text-align: left;
+  text-align: center;
   background-color: #04aa6d;
   color: white;
 }
